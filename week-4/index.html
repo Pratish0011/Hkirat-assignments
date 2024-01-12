@@ -7,16 +7,50 @@
     let todoState = [];
     let oldTodoState = [];
 
-    function addTodoToDom() {
+    function addTodoToDom(todo) {
       const todos = document.getElementById("todos") 
+      const todoElement = document.createElement("div")
+      todoElement.id = todo.id
+      const title = document.createElement("h1")
+      title.innerHTML = todo.title
+      const description = document.createElement("span")
+      description.innerHTML = todo.description
+      const deleteBtn = document.createElement("button")
+      deleteBtn.innerHTML = "Delete"
+      deleteBtn.onclick = removeTodoFromDom(todo)
+      
+      todoElement.appendChild(title)
+      todoElement.appendChild(description)
+      todoElement.appendChild(deleteBtn)
+      
+      todos.appendChild(todoElement)
+
+      // todoElement.innerHTML =`
+      // <h1> ${todo.title}</h1>
+      // <span> ${todo.description}</span>
+      // <button onclick = "removeTodoFromDom(${todo.id})">Delete</button>
+      // `
+
+      // todos.appendChild(todoElement)
         
     }
 
+
     function removeTodoFromDom(todo) {
-      
+      // const todos = document.getElementById("todos")
+      const todoElement = document.getElementById(todo.id)
+      todoElement.parentNode.removeChild(todoElement)
     }
 
     function updateTodoInDom(oldTodo, newTodo) {
+      const todos = document.getElementById("todos")
+      const todoElement = document.getElementById(`todo_${oldTodo.id}`)
+
+      todoElement.innerHTML =`
+      <h1> ${newTodo.title}</h1>
+      <span> ${newTodo.description}</span>
+      <button onclick = "removeTodoFromDom(${newTodo.id})">Delete</button>
+      ` 
         
     }
 
@@ -26,12 +60,43 @@
       // 1. added
       // 2. deleted
       // 3. updated
-      if(newTodos.length > oldTodoState.length) {
-           addTodoToDom()
-      }
+
       const added = [];
       const deleted = [];
       const updated = [];
+
+      newTodos.forEach(newTodo =>{
+        const oldTodo = oldTodoState.find(todo => todo.id === newTodo.id)
+
+        if(!oldTodo){
+          added.push(newTodo)
+        }else if(oldTodo.title !== newTodo.title || oldTodo.description !== newTodo.description){
+          updated.push({oldTodo, newTodo})
+        }
+
+        oldTodoState.forEach(oldTodo =>{
+          const stillExists = newTodos.find(newTodo => newTodo.id === oldTodo.id )
+
+          if(!stillExists){
+            deleted.push(oldTodo)
+          }
+        })
+      
+        added.forEach(todo => addTodoToDom(todo))
+        updated.forEach(({oldTodo, newTodo})=> updateTodoInDom(oldTodo, newTodo))
+        deleted.forEach(todo => removeTodoFromDom(todo))
+
+
+        oldTodoState = [...newTodos]
+
+
+      })
+
+
+
+      if(newTodos.length > oldTodoState.length) {
+           addTodoToDom()
+      }
       // calculate these 3 arrays
       // call addTodo, removeTodo, updateTodo functions on each of the
       // elements
