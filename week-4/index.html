@@ -8,7 +8,8 @@
     let oldTodoState = [];
 
     function addTodoToDom() {
-      
+      const todos = document.getElementById("todos") 
+        
     }
 
     function removeTodoFromDom(todo) {
@@ -25,6 +26,9 @@
       // 1. added
       // 2. deleted
       // 3. updated
+      if(newTodos.length > oldTodoState.length) {
+           addTodoToDom()
+      }
       const added = [];
       const deleted = [];
       const updated = [];
@@ -44,6 +48,7 @@
       })
       updateState(todoState);
     }
+
   </script>
 </head>
 
