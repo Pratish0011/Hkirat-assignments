@@ -20,6 +20,8 @@ export async function createTables() {
             done BOOLEAN DEFAULT false
         );
     `);
+
+    console.log("Table created successfully")
 }
 
 export async function dropTables() {
@@ -27,4 +29,5 @@ export async function dropTables() {
     await client.query(`DROP TABLE IF EXISTS users;`);
 }
 
-module.exports = { createTables, dropTables };
+
+
